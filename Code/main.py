@@ -1,9 +1,13 @@
+import asyncio
 import json
+import random
 
 import discord
 from discord import Embed
 from discord.ext import commands
 import logging
+
+from discord.ext.commands.parameters import empty
 from dotenv import load_dotenv
 import os
 
@@ -104,25 +108,54 @@ async def hello(ct):
 #Non exist command
 @bot.event
 async def on_message(message):
-    if message.author == bot.user:
+    if not message.content.startswith('-'):
+        await bot.process_commands(message)
         return
 
-    if message.content.startswith('-'):
-        command = message.content[1:]
-        if command not in [c.name for c in bot.commands]:
-            embed = Embed(
-                title=f"{data["CNF"]}",
-                description=data["JTSAC"],
-                color=0x7F00FF
-            )
-            embed.add_field(
-                name=data["L"],
-                value=data["CHL"]
-            )
+    content = message.content[1:].strip()
+    if not content:
+        await bot.process_commands(message)
+        return
 
-            await message.channel.send(embed=embed)
+    command_name = content.split()[0]
+
+    if bot.get_command(command_name) is None:
+        embed = Embed(title=f"{data["CNF"]}", description=data["JTSAC"], color=0x7F00FF)
+        embed.add_field(name=data["L"], value=data["CHL"])
+        await message.channel.send(embed=embed)
+        await bot.process_commands(message)
 
     await bot.process_commands(message)
+
 #Non exist command_ND
+
+@bot.command()
+async def roll(ctx, *args):
+    message = await ctx.send("0")
+
+    ran1, ran2 = 1, 100
+
+    if args:
+        try:
+            if "-" in " ".join(args):
+                parts = " ".join(args).split("-")
+                ran1 = int(parts[0].strip())
+                ran2 = int(parts[1].strip())
+            elif len(args) == 2:  # just space
+                ran1 = int(args[0])
+                ran2 = int(args[1])
+        except (ValueError, IndexError):
+            await message.edit(content=data["EF"])
+            return
+
+
+    for _ in range(5):
+        await asyncio.sleep(0.2)
+        await message.edit(content=f" {random.randint(ran1, ran2)}")
+
+    final = random.randint(ran1, ran2)
+    await message.edit(content=f"{final}")
+
+
 
 bot.run(data["DISCORD_TOKEN"], log_handler=handler, log_level=logging.DEBUG)
