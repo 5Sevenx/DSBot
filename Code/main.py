@@ -24,7 +24,6 @@ intents.guilds = True
 #Prefix -
 bot = commands.Bot(command_prefix='-', intents=intents)
 
-
 #Channels id related
 
 #Chill channel id
