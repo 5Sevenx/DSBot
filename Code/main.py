@@ -25,15 +25,6 @@ intents.guilds = True
 bot = commands.Bot(command_prefix='-', intents=intents)
 
 #Channels id related
-
-#Chill channel id
-CId = int(data["CHILL_CHANNEL_ID"])
-#Chill channel id_ND
-
-#Game channel id
-GId = int(data["GAME_CHANNEL_ID"])
-#Game channel id_ND
-
 temp_channelsC = []
 temp_channelsG = []
 
@@ -66,7 +57,7 @@ async def on_voice_state_update(member, before, after):
     guild = member.guild
 
     # --- Chill ---
-    if after.channel and after.channel.id == CId:
+    if after.channel and after.channel.id == int(data["CHILL_CHANNEL_ID"]):
         cntC += 1
         new_channel = await guild.create_voice_channel(
             name=f'c{cntC}' ,category=after.channel.category
@@ -76,7 +67,7 @@ async def on_voice_state_update(member, before, after):
     # --- Chill ---
 
     # --- Game  ---
-    elif after.channel and after.channel.id == GId:
+    elif after.channel and after.channel.id == int(data["GAME_CHANNEL_ID"]):
         cntG += 1
         new_channel = await guild.create_voice_channel(
             name=f'g{cntG}' ,category=after.channel.category
@@ -133,4 +124,5 @@ async def on_message(message):
 
     await bot.process_commands(message)
 #Non exist command_ND
+
 bot.run(data["DISCORD_TOKEN"], log_handler=handler, log_level=logging.DEBUG)
