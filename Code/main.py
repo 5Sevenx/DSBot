@@ -1,4 +1,7 @@
+import json
+
 import discord
+from discord import Embed
 from discord.ext import commands
 import logging
 from dotenv import load_dotenv
@@ -8,7 +11,9 @@ from unicodedata import category
 
 load_dotenv()
 
-token = os.getenv('DISCORD_TOKEN')
+data_JSON = os.getenv('DATA_JSON')
+data = json.loads(data_JSON)
+
 
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 intents = discord.Intents.default()
@@ -16,16 +21,18 @@ intents.message_content = True
 intents.members= True
 intents.guilds = True
 
-bot = commands.Bot(command_prefix='!', intents=intents)
+#Prefix -
+bot = commands.Bot(command_prefix='-', intents=intents)
+
 
 #Channels id related
 
 #Chill channel id
-CId = int(os.getenv("CHILL_CHANNEL_ID"))
+CId = int(data["CHILL_CHANNEL_ID"])
 #Chill channel id_ND
 
 #Game channel id
-GId = int(os.getenv("GAME_CHANNEL_ID"))
+GId = int(data["GAME_CHANNEL_ID"])
 #Game channel id_ND
 
 temp_channelsC = []
@@ -38,7 +45,21 @@ cntG = 0
 
 #Channels id related_ND
 
+#Ready
+@bot.event
+async def on_ready():
+    print(r""" 
+      :::::::::  ::::::::::     :::     :::::::::  :::   :::      ::::::::::: ::::::::          ::::::::   :::::::: 
+     :+:    :+: :+:          :+: :+:   :+:    :+: :+:   :+:          :+:    :+:    :+:        :+:    :+: :+:    :+: 
+    +:+    +:+ +:+         +:+   +:+  +:+    +:+  +:+ +:+           +:+    +:+    +:+        +:+        +:+    +:+  
+   +#++:++#:  +#++:++#   +#++:++#++: +#+    +:+   +#++:            +#+    +#+    +:+        :#:        +#+    +:+   
+  +#+    +#+ +#+        +#+     +#+ +#+    +#+    +#+             +#+    +#+    +#+        +#+   +#+# +#+    +#+    
+ #+#    #+# #+#        #+#     #+# #+#    #+#    #+#             #+#    #+#    #+#        #+#    #+# #+#    #+#     
+###    ### ########## ###     ### #########     ###             ###     ########          ########   ########       
+    """)
+#Ready_ND
 
+#Create VC
 @bot.event
 async def on_voice_state_update(member, before, after):
     global cntC
@@ -83,5 +104,34 @@ async def on_voice_state_update(member, before, after):
             temp_channelsC.remove(channel_id)
             cntC -= 1
     # --- Chill ---
+#Create VC_ND
 
-bot.run(token, log_handler=handler, log_level=logging.DEBUG)
+
+@bot.command()
+async def hello(ct):
+    await ct.send(f'Hello {ct.author.mention}')
+
+#Non exist command
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+
+    if message.content.startswith('-'):
+        command = message.content[1:]
+        if command not in [c.name for c in bot.commands]:
+            embed = Embed(
+                title=f"{data["CNF"]}",
+                description=data["JTSAC"],
+                color=0x7F00FF
+            )
+            embed.add_field(
+                name=data["L"],
+                value=data["CHL"]
+            )
+
+            await message.channel.send(embed=embed)
+
+    await bot.process_commands(message)
+#Non exist command_ND
+bot.run(data["DISCORD_TOKEN"], log_handler=handler, log_level=logging.DEBUG)
