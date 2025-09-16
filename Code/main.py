@@ -1,17 +1,10 @@
 import asyncio
-import json
-import random
 import logging
 import discord
-import os
 
-
-from discord import Embed
 from discord.ext import commands
-
 from Code.CONF.config_variables import data
 from Code.RDY.ready import setup_ready
-from dotenv import load_dotenv
 from Code.VC.voice import on_voice
 from Code.MSG.messages import non_exist_message
 from Code.CMD.commands import roll_command
