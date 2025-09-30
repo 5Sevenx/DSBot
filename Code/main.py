@@ -1,38 +1,31 @@
 import asyncio
-import logging
-import discord
+
 
 from discord.ext import commands
-from Code.CONF.config_variables import data
-from Code.RDY.ready import setup_ready
-from Code.VC.voice import on_voice
-from Code.MSG.messages import non_exist_message
-from Code.CMD.commands import roll_command
 
+from Code.CMD.commands import RollCommand
+from Code.CONF.config_variables import data, intents
+from Code.LOG.log_related import JoinLeaveLogger
+from Code.MSG.messages import NonExistMessage
+from Code.RDY.ready import RDY
+from Code.VC.voice import OnVoice
 
-handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
-intents = discord.Intents.default()
-intents.message_content = True
-intents.members= True
-intents.guilds = True
-
-#Prefix -
 bot = commands.Bot(command_prefix='-', intents=intents)
 
-#Ready
-asyncio.run(setup_ready(bot))
-#Ready_ND
+async def main():
+    #Ready
+    await bot.add_cog(RDY(bot))
+    #Ready_ND
 
-#Create VC
-asyncio.run(on_voice(bot))
-#Create VC_ND
+    await bot.add_cog(NonExistMessage(bot))
 
-#Non exist command
-asyncio.run(non_exist_message(bot))
-#Non exist command_ND
+    await bot.add_cog(RollCommand(bot))
 
-#Roll
-asyncio.run(roll_command(bot))
-#Roll_ND
 
-bot.run(data["DISCORD_TOKEN"], log_handler=handler, log_level=logging.DEBUG)
+    # await bot.add_cog(OnVoice(bot))
+
+    await bot.add_cog(JoinLeaveLogger(bot))
+
+    await bot.start(data["DISCORD_TOKEN"])
+
+asyncio.run(main())
