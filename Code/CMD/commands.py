@@ -10,6 +10,7 @@ class RollCommand(commands.Cog):
 
     @commands.command()
     async def roll(self, ctx, *args):
+        await ctx.message.delete(delay=DeleteMSGTiming)
         msg = await ctx.send("0")
         ran1, ran2 = 1, 100
 

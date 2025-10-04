@@ -5,7 +5,7 @@ from discord.ext import commands
 
 from Code.CMD.commands import RollCommand
 from Code.CONF.config_variables import data, intents
-from Code.LOG.log_related import JoinLeaveLogger
+from Code.LOG.log_related import JoinLeaveLogger, OnSpy
 from Code.MSG.messages import NonExistMessage
 from Code.RDY.ready import RDY
 from Code.VC.voice import OnVoice
@@ -22,7 +22,9 @@ async def main():
     await bot.add_cog(RollCommand(bot))
 
 
-    # await bot.add_cog(OnVoice(bot))
+    await bot.add_cog(OnVoice(bot))
+
+    await bot.add_cog(OnSpy(bot))
 
     await bot.add_cog(JoinLeaveLogger(bot))
 

@@ -2,7 +2,7 @@ from discord import Embed
 from discord.ext import commands
 from Code.CONF.config_variables import data
 
-DeleteMSGTiming = 90
+DeleteMSGTiming = 300
 
 class NonExistMessage(commands.Cog):
     def __init__(self, bot):
@@ -28,3 +28,4 @@ class NonExistMessage(commands.Cog):
             embed.add_field(name=data["L"], value=data["CHL"])
             await message.channel.send(embed=embed, delete_after=DeleteMSGTiming)
 
+#TODO:Error handler. if i got correct command but wrong parameters
