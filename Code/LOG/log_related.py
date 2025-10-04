@@ -1,12 +1,11 @@
 import discord
-from aiohttp.web_routedef import delete
 from discord.ext import commands
-from discord import Embed
+from discord import Embed, guild
 import datetime
 
 from Code.CONF.config_variables import data
 
-
+#Join Leave logger
 class JoinLeaveLogger(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -45,21 +44,23 @@ class JoinLeaveLogger(commands.Cog):
             embed.add_field(name="Name", value=member.name, inline=True)
             embed.add_field(name="ID", value=member.id, inline=True)
             await channel.send(embed=embed)
+#Join Leave logger_ND
 
-
+#TODO:Set spy by id not by tag
+#Spy
 spy_users = {}
-
 class OnSpy(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command()
-    async def spy(self,ctx,member:discord.Member,t:int):
+    async def spy(self,ctx,member_id:int,t:int):
         global spy_users
+        member = guild.get_member(member_id)
         allowed_channel_id = int(data["SPY_CHANNEL_ID"])
 
         if ctx.channel.id  != allowed_channel_id:
-            await ctx.channel.send("Не в этом чате...",delete_after=2)
+            await ctx.channel.send(data["NH"],delete_after=2)
             return
 
         channel = ctx.guild.get_channel(allowed_channel_id)
@@ -67,7 +68,7 @@ class OnSpy(commands.Cog):
         if channel:
             embed = Embed(
                 title=data["SS"],
-                description=data["US"].format(member=member.mention),
+                description=data["US"].format(member=member),
                 color=0x4CBB17,
                 timestamp=datetime.datetime.utcnow()
             )
@@ -89,10 +90,7 @@ class OnSpy(commands.Cog):
             if channel:
                 embed = Embed(
                     title=data["MD"],
-                    description=data["ST"].format(
-                        author=message.author.mention,
-                        channel=message.channel.mention,
-                        content=message.content),
+                    description=data["ST"].format(message=message),
                     color=0x808080,
                     timestamp=datetime.datetime.utcnow()
                 )
@@ -110,7 +108,7 @@ class OnSpy(commands.Cog):
             if channel:
                 embed = Embed(
                     title=data["SE"],
-                    description=data["US"].format(member=member.mention),
+                    description=data["US"].format(member=member),
                     color=0x808080,
                     timestamp=datetime.datetime.utcnow()
                 )
@@ -127,7 +125,7 @@ class OnSpy(commands.Cog):
         if after.channel is not None and before.channel != after.channel and before.channel is None:
             embed = Embed(
                 title=data["JTNC"],
-                description=data["JTNCU"].format(member=member.mention, after=after.channel.name),
+                description=data["JTNCU"].format(member=member, after=after),
                 color=0x808080,
                 timestamp=datetime.datetime.utcnow()
             )
@@ -138,7 +136,7 @@ class OnSpy(commands.Cog):
         elif after.channel is None and before.channel is not None:
             embed = Embed(
                 title=data["LVC"],
-                description=data["LVCU"].format(member=member.mention, before=before.channel.name),
+                description=data["LVCU"].format(member=member, before=before),
                 color=0x808080,
                 timestamp=datetime.datetime.utcnow()
             )
@@ -149,10 +147,10 @@ class OnSpy(commands.Cog):
         elif after.channel is not None and before.channel is not None and before.channel != after.channel:
             embed = Embed(
                 title=data["MBVC"],
-                description=data["MBVCU"].format(member=member.mention, after=after.channel.name,before=before.channel.name),
+                description=data["MBVCU"].format(member=member,after=after,before=before),
                 color=0x808080,
                 timestamp=datetime.datetime.utcnow()
             )
             embed.set_thumbnail(url=member.display_avatar.url)
             await channel.send(embed=embed)
-
+#Spy_ND

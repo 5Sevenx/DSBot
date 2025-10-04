@@ -2,7 +2,7 @@ from discord.ext import commands
 
 from Code.CONF.config_variables import data
 
-#Channels id related_ND
+
 class OnVoice(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

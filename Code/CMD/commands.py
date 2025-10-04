@@ -4,6 +4,7 @@ from discord.ext import commands
 from Code.MSG.messages import DeleteMSGTiming
 from Code.CONF.config_variables import data
 
+#Roll CMD
 class RollCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -34,3 +35,41 @@ class RollCommand(commands.Cog):
         final = random.randint(ran1, ran2)
         await msg.edit(content=f"{final}")
         await msg.delete(delay=DeleteMSGTiming)
+#Roll CMD_ND
+
+
+#Delete messages CMD
+class DeleteMessages(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.command()
+    async def dl(self, ctx, n:int):
+        allowed_roles = [1423857083715158118,1262512004707651704]
+
+        if not any(role.id in allowed_roles for role in ctx.author.roles):
+            await ctx.send(data["NERTE"], delete_after=5)
+            return
+
+        if n > 20:
+            confirm_msg = await ctx.send(data["AUSYWTD"].format(n=n))
+            await confirm_msg.add_reaction("✅")
+            await confirm_msg.add_reaction("❌")
+
+            def check(reaction, user):
+                return user == ctx.author and str(reaction.emoji) in ["✅", "❌"] and reaction.message.id == confirm_msg.id
+            try:
+                reaction,user = await self.bot.wait_for("reaction_add",timeout=30.0,check=check)
+            except asyncio.TimeoutError:
+                await ctx.send(data["WTE"], delete_after=5)
+                await ctx.channel.purge(limit=3)
+                return
+
+            if str(reaction.emoji) == "✅":
+                await ctx.channel.purge(limit=n+1)
+            else:
+                await ctx.send(data["DC"], delete_after=5)
+                await ctx.channel.purge(limit=3)
+        else:
+            await ctx.channel.purge(limit=n+1)
+#Delete messages CMD_ND

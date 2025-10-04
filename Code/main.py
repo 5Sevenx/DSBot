@@ -3,7 +3,7 @@ import asyncio
 
 from discord.ext import commands
 
-from Code.CMD.commands import RollCommand
+from Code.CMD.commands import RollCommand, DeleteMessages
 from Code.CONF.config_variables import data, intents
 from Code.LOG.log_related import JoinLeaveLogger, OnSpy
 from Code.MSG.messages import NonExistMessage
@@ -21,6 +21,7 @@ async def main():
 
     await bot.add_cog(RollCommand(bot))
 
+    await bot.add_cog(DeleteMessages(bot))
 
     await bot.add_cog(OnVoice(bot))
 
