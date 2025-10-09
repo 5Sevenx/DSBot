@@ -6,7 +6,7 @@ from discord.ext import commands
 from Code.CMD.commands import RollCommand, DeleteMessages
 from Code.CONF.config_variables import data, intents
 from Code.LOG.log_related import JoinLeaveLogger, OnSpy
-from Code.MSG.messages import NonExistMessage
+from Code.MSG.messages import MissingParameters
 from Code.RDY.ready import RDY
 from Code.VC.voice import OnVoice
 
@@ -17,7 +17,7 @@ async def main():
     await bot.add_cog(RDY(bot))
     #Ready_ND
 
-    await bot.add_cog(NonExistMessage(bot))
+    await bot.add_cog(MissingParameters(bot))
 
     await bot.add_cog(RollCommand(bot))
 

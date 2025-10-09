@@ -1,3 +1,6 @@
+import asyncio
+from re import purge
+
 import discord
 from discord.ext import commands
 from discord import Embed, guild
@@ -46,7 +49,6 @@ class JoinLeaveLogger(commands.Cog):
             await channel.send(embed=embed)
 #Join Leave logger_ND
 
-#TODO:Set spy by id not by tag
 #Spy
 spy_users = {}
 class OnSpy(commands.Cog):
@@ -54,17 +56,23 @@ class OnSpy(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def spy(self,ctx,member_id:int,t:int):
+    async def spy(self,ctx,member_id:int,time:int):
         global spy_users
+        guild = ctx.guild
         member = guild.get_member(member_id)
         allowed_channel_id = int(data["SPY_CHANNEL_ID"])
+
+        if not member:
+            await ctx.channel.send("Here is no user with that id")
+            await asyncio.sleep(2)
+            await ctx.channel.purge(limit=2)
 
         if ctx.channel.id  != allowed_channel_id:
             await ctx.channel.send(data["NH"],delete_after=2)
             return
 
         channel = ctx.guild.get_channel(allowed_channel_id)
-        spy_users[member.id] = datetime.datetime.utcnow() + datetime.timedelta(minutes=t)
+        spy_users[member.id] = datetime.datetime.utcnow() + datetime.timedelta(minutes=time)
         if channel:
             embed = Embed(
                 title=data["SS"],
