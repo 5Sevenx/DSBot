@@ -15,7 +15,7 @@ class JoinLeaveLogger(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        channel = member.guild.get_channel(int(data["SPY_CHANNEL_ID"]))
+        channel = member.guild.get_channel(int(data["JOIN_CHANNEL_ID"]))
         if channel:
             embed = Embed(
                 title=data["NM"],
@@ -35,7 +35,7 @@ class JoinLeaveLogger(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        channel = member.guild.get_channel(int(data["SPY_CHANNEL_ID"]))
+        channel = member.guild.get_channel(int(data["LEAVE_CHANNEL_ID"]))
         if channel:
             embed = Embed(
                 title=data["LV"],

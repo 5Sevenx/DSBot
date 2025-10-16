@@ -44,15 +44,15 @@ class DeleteMessages(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def dl(self, ctx, n:int):
+    async def dl(self, ctx, number:int):
         allowed_roles = [1423857083715158118,1262512004707651704]
 
         if not any(role.id in allowed_roles for role in ctx.author.roles):
             await ctx.send(data["NERTE"], delete_after=5)
             return
 
-        if n > 20:
-            confirm_msg = await ctx.send(data["AUSYWTD"].format(n=n))
+        if number > 20:
+            confirm_msg = await ctx.send(data["AUSYWTD"].format(number=number))
             await confirm_msg.add_reaction("✅")
             await confirm_msg.add_reaction("❌")
 
@@ -66,10 +66,10 @@ class DeleteMessages(commands.Cog):
                 return
 
             if str(reaction.emoji) == "✅":
-                await ctx.channel.purge(limit=n+1)
+                await ctx.channel.purge(limit=number+1)
             else:
                 await ctx.send(data["DC"], delete_after=5)
                 await ctx.channel.purge(limit=3)
         else:
-            await ctx.channel.purge(limit=n+1)
+            await ctx.channel.purge(limit=number+1)
 #Delete messages CMD_ND

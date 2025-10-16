@@ -27,15 +27,21 @@ class MissingParameters(commands.Cog):
                 await ctx.channel.send(embed=embed, delete_after=DeleteMSGTiming)
                 return
 
-
         if isinstance(error, commands.MissingRequiredArgument):
-            embed = Embed(
-                title="Missing Argument",
-                description=data["MISSA"].format(error=error, ctx=ctx),
-                colour=0x7F00FF
+            missing_arg = error.param.name
+            usage = f"{ctx.prefix}{ctx.command} " + " ".join(
+                f"<{p.name}>" if p.default == p.empty else f"[{p.name}]"
+                for p in ctx.command.clean_params.values()
             )
+            embed = Embed(
+                title=data["MISSA"].format(missing_arg = missing_arg),
+                description=data["ExU"].format(usage = usage),
+                color=0xFF0000
+            )
+            embed.add_field(name=data["L"], value=data["CHL"])
             await ctx.message.delete()
             await ctx.channel.send(embed=embed, delete_after=DeleteMSGTiming)
+            return
 
 
         elif isinstance(error, commands.CommandNotFound):
@@ -48,5 +54,3 @@ class MissingParameters(commands.Cog):
             embed.add_field(name=data["L"], value=data["CHL"])
             await ctx.message.delete()
             await ctx.channel.send(embed=embed, delete_after=DeleteMSGTiming)
-
-#TODO:Help command to help with commands n arguments
