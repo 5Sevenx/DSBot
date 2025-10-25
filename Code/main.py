@@ -31,6 +31,9 @@ async def main():
 
     await bot.start(data["DISCORD_TOKEN"])
 
+
+#TODO:how many time user is on vc and convert it to cookies(like money)
+
 if __name__ == "__main__":
     try:
         asyncio.run(main())
